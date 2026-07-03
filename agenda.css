@@ -1,0 +1,176 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#eaf2ff;
+}
+
+.container{
+    display:flex;
+    min-height:100vh;
+}
+
+/* MENU LATERAL */
+
+.sidebar{
+    width:250px;
+    background:#2563eb;
+    color:white;
+    padding:20px;
+}
+
+.sidebar h2{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.sidebar button{
+    width:100%;
+    padding:12px;
+    background:white;
+    color:#2563eb;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.sidebar button:hover{
+    background:#dbeafe;
+}
+
+/* CONTEÚDO */
+
+main{
+    flex:1;
+    padding:30px;
+}
+
+main h1{
+    color:#2563eb;
+    margin-bottom:20px;
+}
+
+#buscar{
+    width:100%;
+    padding:10px;
+    margin-bottom:20px;
+    border:1px solid #b6c9ff;
+    border-radius:6px;
+    font-size:15px;
+}
+
+/* FORMULÁRIO */
+
+form{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.1);
+    margin-bottom:20px;
+}
+
+.campo{
+    margin-bottom:15px;
+}
+
+.campo label{
+    display:block;
+    margin-bottom:5px;
+    color:#2563eb;
+    font-weight:bold;
+}
+
+.campo input,
+.campo select{
+    width:100%;
+    padding:10px;
+    border:1px solid #b6c9ff;
+    border-radius:6px;
+    font-size:15px;
+}
+
+#salvar{
+    width:100%;
+    padding:12px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+#salvar:hover{
+    background:#1d4ed8;
+}
+
+#mensagem{
+    color:red;
+    margin:10px 0;
+    font-weight:bold;
+}
+
+/* TABELA */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    margin-top:20px;
+    box-shadow:0 0 10px rgba(0,0,0,.1);
+}
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+    text-align:center;
+}
+
+tr:hover{
+    background:#eef4ff;
+}
+
+/* BOTÕES */
+
+.editar{
+    background:#3b82f6;
+    color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:5px;
+    cursor:pointer;
+    margin-right:5px;
+}
+
+.editar:hover{
+    background:#2563eb;
+}
+
+.excluir{
+    background:#ef4444;
+    color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.excluir:hover{
+    background:#dc2626;
+}
+
+hr{
+    margin:20px 0;
+}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="agenda.css">
+</head>
+<body>
+    
+    <div class="container">
+    
+        <!-- Menu lateral que nao serve para nada a nao ser estetica -->
+        <aside class="sidebar">
+    
+            <h2>Agenda de Contatos</h2>
+                
+            <button id="novoContato">
+                <i class="fa-solid fa-user-plus"></i>
+                Novo Contato
+            </button>
+    
+        </aside>
+    
+        <!-- parte principal do codigo -->
+        <main>
+    
+            <h1>Agenda de Contatos</h1>
+    
+            <!-- procura dos contatos ja existentes -->
+            <input
+                type="text"
+                id="buscar"
+                placeholder="Buscar contato..."
+            >
+    
+            <!-- Formulário para adicionar os contatos novos -->
+            <form id="formContato">
+    
+                <input type="hidden" id="indice">
+    
+                <div class="campo">
+                    <label>Nome Completo</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        placeholder="Digite o nome"
+                    >
+                </div>
+    
+                <div class="campo">
+                    <label>Telefone</label>
+                    <input
+                        type="text"
+                        id="telefone"
+                        placeholder="(99) 99999-9999"
+                    >
+                </div>
+    
+                <div class="campo">
+                    <label>E-mail</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="email@exemplo.com"
+                    >
+                </div>
+    
+                <div class="campo">
+                    <label>Categoria</label>
+    
+                    <select id="categoria">
+                        <option>Amigos</option>
+                        <option>Família</option>
+                        <option>Trabalho</option>
+                        <option>Outros</option>
+                    </select>
+    
+                </div>
+    
+                <button type="submit" id="salvar">
+                    Salvar Contato
+                </button>
+    
+            </form>
+    
+            <p id="mensagem"></p>
+    
+            <hr>
+    
+            <h2>Lista de Contatos</h2>
+    
+            <table>
+    
+                <thead>
+    
+                    <tr>
+    
+                        <th>Nome</th>
+                        <th>Telefone</th>
+                        <th>E-mail</th>
+                        <th>Categoria</th>
+                        <th>Ações</th>
+    
+                    </tr>
+    
+                </thead>
+    
+                <tbody id="listaContatos">
+    
+                </tbody>
+    
+            </table>
+    
+        </main>
+    
+    </div>
+
+<script src="agenda.js"></script>
+
+</body>
+</html>
