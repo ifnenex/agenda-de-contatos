@@ -1,4 +1,7 @@
+
 let contatos = [];
+
+const API = "http://localhost:3000/contatos";
 
 const form = document.getElementById("formContato");
 const nome = document.getElementById("nome");
@@ -10,6 +13,23 @@ const buscar = document.getElementById("buscar");
 const mensagem = document.getElementById("mensagem");
 const indice = document.getElementById("indice");
 const novoContato = document.getElementById("novoContato");
+
+async function carregarContatos() {
+    try {
+        const resposta = await fetch(API);
+
+        if (!resposta.ok) {
+            throw new Error("Erro ao buscar contatos");
+        }
+
+        contatos = await resposta.json();
+
+        mostrarContatos(buscar.value);
+
+    } catch (erro) {
+        mensagem.textContent = "Erro ao conectar com o backend.";
+    }
+}
 
 novoContato.addEventListener("click", function () {
     form.reset();
@@ -70,17 +90,17 @@ form.addEventListener("submit", function (e) {
 
     form.reset();
     indice.value = "";
-    mostrarContatos();
+    mostrarContatos(buscar.value);
 });
 
 function mostrarContatos(filtro = "") {
 
     lista.innerHTML = "";
 
-    contatos.forEach(function(contato, i){
+    contatos.forEach(function(contato, i) {
 
-        if(!contato.nome.toLowerCase().includes(filtro.toLowerCase()) &&
-           !contato.email.toLowerCase().includes(filtro.toLowerCase())){
+        if (!contato.nome.toLowerCase().includes(filtro.toLowerCase()) &&
+            !contato.email.toLowerCase().includes(filtro.toLowerCase())) {
             return;
         }
 
@@ -103,10 +123,9 @@ function mostrarContatos(filtro = "") {
         </tr>
         `;
     });
-
 }
 
-function editar(i){
+function editar(i) {
 
     nome.value = contatos[i].nome;
     telefone.value = contatos[i].telefone;
@@ -114,23 +133,20 @@ function editar(i){
     categoria.value = contatos[i].categoria;
 
     indice.value = i;
-
 }
 
-function excluir(i){
+function excluir(i) {
 
-    if(confirm("Deseja excluir este contato?")){
+    if (confirm("Deseja excluir este contato?")) {
 
-        contatos.splice(i,1);
+        contatos.splice(i, 1);
 
         mostrarContatos(buscar.value);
-
     }
-
 }
 
-buscar.addEventListener("input", function(){
-
+buscar.addEventListener("input", function() {
     mostrarContatos(buscar.value);
-
 });
+
+carregarContatos();
