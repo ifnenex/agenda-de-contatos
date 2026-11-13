@@ -1,152 +1,125 @@
 
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+const PORT = 3000;
+
+app.use(cors());
+app.use(express.json());
+
 let contatos = [];
+let proximoId = 1;
 
-const API = "http://localhost:3000/contatos";
-
-const form = document.getElementById("formContato");
-const nome = document.getElementById("nome");
-const telefone = document.getElementById("telefone");
-const email = document.getElementById("email");
-const categoria = document.getElementById("categoria");
-const lista = document.getElementById("listaContatos");
-const buscar = document.getElementById("buscar");
-const mensagem = document.getElementById("mensagem");
-const indice = document.getElementById("indice");
-const novoContato = document.getElementById("novoContato");
-
-async function carregarContatos() {
-    try {
-        const resposta = await fetch(API);
-
-        if (!resposta.ok) {
-            throw new Error("Erro ao buscar contatos");
-        }
-
-        contatos = await resposta.json();
-
-        mostrarContatos(buscar.value);
-
-    } catch (erro) {
-        mensagem.textContent = "Erro ao conectar com o backend.";
-    }
-}
-
-novoContato.addEventListener("click", function () {
-    form.reset();
-    indice.value = "";
-    mensagem.textContent = "";
+app.get("/contatos", (req, res) => {
+    return res.json(contatos);
 });
 
-form.addEventListener("submit", function (e) {
-    e.preventDefault();
+app.get("/contatos/:id", (req, res) => {
+    const id = Number(req.params.id);
 
-    mensagem.textContent = "";
+    const contato = contatos.find(item => item.id === id);
 
-    if (
-        nome.value.trim() === "" ||
-        telefone.value.trim() === "" ||
-        email.value.trim() === ""
-    ) {
-        mensagem.textContent = "Preencha todos os campos obrigatórios.";
-        return;
+    if (!contato) {
+        return res.status(404).json({
+            mensagem: "Contato não encontrado."
+        });
     }
 
-    const telefoneRegex = /^\(\d{2}\)\s\d{5}-\d{4}$/;
+    return res.json(contato);
+});
 
-    if (!telefoneRegex.test(telefone.value)) {
-        mensagem.textContent = "Telefone inválido. Ex: (11) 99999-9999";
-        return;
+app.post("/contatos", (req, res) => {
+    const dados = req.body;
+
+    if (!dados.nome || !dados.telefone || !dados.email) {
+        return res.status(400).json({
+            mensagem: "Preencha os campos obrigatórios."
+        });
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(email.value)) {
-        mensagem.textContent = "E-mail inválido.";
-        return;
-    }
-
-    const repetido = contatos.some((contato, i) => {
-        return contato.email.toLowerCase() === email.value.toLowerCase() &&
-               i != indice.value;
-    });
+    const repetido = contatos.some(item =>
+        item.email.toLowerCase() === dados.email.trim().toLowerCase()
+    );
 
     if (repetido) {
-        mensagem.textContent = "Este e-mail já está cadastrado.";
-        return;
+        return res.status(400).json({
+            mensagem: "Este e-mail já está cadastrado."
+        });
     }
 
-    const contato = {
-        nome: nome.value,
-        telefone: telefone.value,
-        email: email.value,
-        categoria: categoria.value
+    const novoContato = {
+        id: proximoId++,
+        nome: dados.nome,
+        telefone: dados.telefone,
+        email: dados.email,
+        categoria: dados.categoria || ""
     };
 
-    if (indice.value === "") {
-        contatos.push(contato);
-    } else {
-        contatos[indice.value] = contato;
-    }
+    contatos.push(novoContato);
 
-    form.reset();
-    indice.value = "";
-    mostrarContatos(buscar.value);
+    return res.status(201).json(novoContato);
 });
 
-function mostrarContatos(filtro = "") {
+app.put("/contatos/:id", (req, res) => {
+    const id = Number(req.params.id);
 
-    lista.innerHTML = "";
+    const indice = contatos.findIndex(item => item.id === id);
 
-    contatos.forEach(function(contato, i) {
+    if (indice === -1) {
+        return res.status(404).json({
+            mensagem: "Contato não encontrado."
+        });
+    }
 
-        if (!contato.nome.toLowerCase().includes(filtro.toLowerCase()) &&
-            !contato.email.toLowerCase().includes(filtro.toLowerCase())) {
-            return;
-        }
+    const dados = req.body;
 
-        lista.innerHTML += `
-        <tr>
-            <td>${contato.nome}</td>
-            <td>${contato.telefone}</td>
-            <td>${contato.email}</td>
-            <td>${contato.categoria}</td>
+    if (!dados.nome || !dados.telefone || !dados.email) {
+        return res.status(400).json({
+            mensagem: "Preencha os campos obrigatórios."
+        });
+    }
 
-            <td>
-                <button class="editar" onclick="editar(${i})">
-                    Editar
-                </button>
+    const repetido = contatos.some(item =>
+        item.email.toLowerCase() === dados.email.trim().toLowerCase()
+        && item.id !== id
+    );
 
-                <button class="excluir" onclick="excluir(${i})">
-                    Excluir
-                </button>
-            </td>
-        </tr>
-        `;
+    if (repetido) {
+        return res.status(400).json({
+            mensagem: "Este e-mail já está cadastrado."
+        });
+    }
+
+    contatos[indice] = {
+        id: id,
+        nome: dados.nome,
+        telefone: dados.telefone,
+        email: dados.email,
+        categoria: dados.categoria || ""
+    };
+
+    return res.json(contatos[indice]);
+});
+
+app.delete("/contatos/:id", (req, res) => {
+    const id = Number(req.params.id);
+
+    const indice = contatos.findIndex(item => item.id === id);
+
+    if (indice === -1) {
+        return res.status(404).json({
+            mensagem: "Contato não encontrado."
+        });
+    }
+
+    contatos.splice(indice, 1);
+
+    return res.json({
+        mensagem: "Contato excluído com sucesso."
     });
-}
-
-function editar(i) {
-
-    nome.value = contatos[i].nome;
-    telefone.value = contatos[i].telefone;
-    email.value = contatos[i].email;
-    categoria.value = contatos[i].categoria;
-
-    indice.value = i;
-}
-
-function excluir(i) {
-
-    if (confirm("Deseja excluir este contato?")) {
-
-        contatos.splice(i, 1);
-
-        mostrarContatos(buscar.value);
-    }
-}
-
-buscar.addEventListener("input", function() {
-    mostrarContatos(buscar.value);
 });
 
-carregarContatos();
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});
